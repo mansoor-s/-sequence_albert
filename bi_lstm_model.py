@@ -71,7 +71,9 @@ def create_tpu_strategy(tpu_name):
     tpu_worker = 'grpc://{}'.format(tpu_name.strip())
     logging.info('Using TPU worker: %s', tpu_worker)
     resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=tpu_worker)
+    logging.info("Connecting to TPU Cluster")
     tf.config.experimental_connect_to_cluster(resolver)
+    logging.info("Initialize TPU Cluster")
     tf.tpu.experimental.initialize_tpu_system(resolver)
     logging.info("All devices: ", tf.config.list_logical_devices('TPU'))
 
