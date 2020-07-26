@@ -177,5 +177,5 @@ if __name__ == "__main__":
     vocab_size = tokenizer.load_vocab()
 
     start_pretraining(args.training_path, args.tpu_name,
-                        args.sequence_length, args.batch_size, vocab_size,
+                        args.sequence_length, int(args.batch_size), vocab_size,
                         args.num_epochs, args.model_save_path, args.model_log_path)
