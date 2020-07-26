@@ -55,13 +55,13 @@ def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=int
 def get_new_model(sequence_length, vocab_size):
     model = Sequential()
     model.add(Embedding(vocab_size, 128))
-    model.add(Bidirectional(LSTM(512, activation='relu', return_sequences=True)))
-    model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
+    #model.add(Bidirectional(LSTM(512, activation='relu', return_sequences=True)))
+    #model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
     model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
     model.add(Bidirectional(LSTM(64, activation='relu', return_sequences=True)))
-    model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
-    model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
-    model.add(Bidirectional(LSTM(512, activation='relu', return_sequences=False)))
+    #model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
+    #model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=True)))
+    model.add(Bidirectional(LSTM(128, activation='relu', return_sequences=False)))
     model.add(Dense(sequence_length, activation="softmax"))
 
     return model
