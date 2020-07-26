@@ -112,7 +112,7 @@ def make_or_restore_model(sequence_length, vocab_size, checkpoint_path):
 
 
 
-def start_pretraining(training_path, validation_path, tpu_name, sequence_length,
+def start_pretraining(training_path, tpu_name, sequence_length,
                         batch_size, vocab_size, num_epochs, checkpoint_path, model_log_path):
     """
         batch_size must be a multiple of number of TPU cores (8)
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--training_path", required=True)
-    parser.add_argument("--validation_path", required=True)
+    #parser.add_argument("--validation_path", required=True)
     parser.add_argument("--model_save_path", required=True)
     parser.add_argument("--max_seq_len", default=512)
     parser.add_argument("--vocab_file", required=True)
@@ -176,6 +176,6 @@ if __name__ == "__main__":
     tokenizer = FastaTokenizer(args.vocab_file)
     vocab_size = tokenizer.load_vocab()
 
-    start_pretraining(args.training_path, args.validation_path, args.tpu_name,
+    start_pretraining(args.training_path, args.tpu_name,
                         args.sequence_length, args.batch_size, vocab_size,
-                        args.num_epochs, args.checkpoint_path, args.model_log_path)
+                        args.num_epochs, args.model_save_path, args.model_log_path)
