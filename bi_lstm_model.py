@@ -25,7 +25,7 @@ def _parse_function(proto):
     
     return dense_input_ids, dense_input_ids
 
-def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=1e+8):
+def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=int(1e+8)):
     """
         Create a dataset from multiple TFRecord files in parrallel reads
         Buffer size is 100MB
@@ -54,7 +54,6 @@ def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=1e+
 
 def get_new_model(sequence_length, vocab_size):
     model = Sequential()
-    logging.log('********VOCAB SIZE %d ******', vocab_size)
     model.add(Embedding(vocab_size, 128))
     model.add(Bidirectional(LSTM(1024, activation='relu', return_sequences=True)))
     model.add(Bidirectional(LSTM(1024, activation='relu', return_sequences=True)))
@@ -123,25 +122,25 @@ def start_pretraining(training_path, tpu_name, sequence_length,
     if batch_size % 8:
         raise 'batch_size must be a multiple of number of TPU cores: 8'
 
-    #tpu_strategy = create_tpu_strategy(tpu_name)
+    tpu_strategy = create_tpu_strategy(tpu_name)
 
     logging.info('Creating/Loading model')
-    #with tpu_strategy.scope():
-    model = make_or_restore_model(sequence_length, vocab_size, checkpoint_path)
-    model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
+    with tpu_strategy.scope():
+        model = make_or_restore_model(sequence_length, vocab_size, checkpoint_path)
+        model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
 
     
     logging.info('Gather training and validation data files')
-    input_files = tf.io.gfile.glob(data_source)
+    input_files = tf.io.gfile.glob(training_path)
     validation_files = input_files[-1:]
     training_files = input_files[:-1]
 
-    logging.info('Training files: ', training_files)
-    logging.info('Validation files: ', validation_files)
+    logging.info('Training files: %s', training_files)
+    logging.info('Validation files: %s', validation_files)
 
     logging.info('Creating training and validation datasets')
     training_dataset = create_dataset(input_files, batch_size)
-    validation_dataset = create_dataset(evaluation_file, batch_size)
+    validation_dataset = create_dataset(validation_files, batch_size)
 
     callbacks = [
         keras.callbacks.ModelCheckpoint(
@@ -151,7 +150,8 @@ def start_pretraining(training_path, tpu_name, sequence_length,
     ]
 
     logging.info('Starting model fit')
-    model.fit(epochs=num_epochs, steps_per_epoch=batch_size, validation_data=validation_dataset)
+    model.fit(training_dataset, epochs=num_epochs, steps_per_epoch=batch_size, 
+                validation_data=validation_dataset)
     logging.info('Model fit finished')
 
 
@@ -176,7 +176,10 @@ if __name__ == "__main__":
     logging.info('  %s', args)
 
     tokenizer = FastaTokenizer(args.vocab_file)
-    vocab_size = tokenizer.load_vocab()
+    tokenizer.load_vocab()
+
+    vocab_size = tokenizer.vocab_size()
+    
 
     start_pretraining(args.training_path, args.tpu_name,
                         int(args.sequence_length), int(args.batch_size), vocab_size,
