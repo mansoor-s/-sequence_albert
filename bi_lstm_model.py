@@ -51,7 +51,6 @@ def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=int
     
     return batched_dataset
 
-@tf.function
 def get_new_model(sequence_length, vocab_size):
     model = Sequential()
     model.add(Embedding(vocab_size, 128))
@@ -80,7 +79,7 @@ def create_tpu_strategy(tpu_name):
 
     return strategy
 
-@tf.function
+
 def download_model_checkpoint(path):
     logging.info('Downloading model checkpoint: %s', path)
     model_file = file_io.FileIO(path, mode='rb')
