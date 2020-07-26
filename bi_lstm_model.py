@@ -75,15 +75,15 @@ def create_tpu_strategy(tpu_name):
     tf.config.experimental_connect_to_cluster(resolver)
     logging.info("Initialize TPU Cluster")
     tf.tpu.experimental.initialize_tpu_system(resolver)
-    logging.info("All devices: ", tf.config.list_logical_devices('TPU'))
+    logging.info("All devices: %s", tf.config.list_logical_devices('TPU'))
 
-    strategy = tf.distribute.experimental.TPUStrategy(resolver)
+    strategy = tf.distribute.TPUStrategy(resolver)
 
     return strategy
 
 
 def download_model_checkpoint(path):
-    logging.info('Downloading model checkpoint: ', path)
+    logging.info('Downloading model checkpoint: %s', path)
     model_file = file_io.FileIO(path, mode='rb')
     file_name = path.split('/')[-1:]
     downloaded_path = '{}/{}'.format(tempfile.gettempdir(), file_name)
@@ -107,7 +107,7 @@ def make_or_restore_model(sequence_length, vocab_size, checkpoint_path):
             checkpoint_file_stats.sort(key=lambda stat: stat[1], reverse=True)
 
             latest_checkpoint = checkpoint_file_stats[0]
-            logging.info("Restoring from", latest_checkpoint)
+            logging.info("Restoring from: %s", latest_checkpoint)
             return download_model_checkpoint(latest_checkpoint)
    
     logging.info("Creating a new model")
