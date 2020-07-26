@@ -68,7 +68,7 @@ def get_new_model(sequence_length, vocab_size):
 
 
 def create_tpu_strategy(tpu_name):
-    tpu_worker = 'grpc://{}'.format(tpu_name.strip())
+    tpu_worker = 'grpc://{}:8470'.format(tpu_name.strip())
     logging.info('Using TPU worker: %s', tpu_worker)
     resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=tpu_worker)
     logging.info("Connecting to TPU Cluster")
