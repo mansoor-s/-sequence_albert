@@ -130,7 +130,7 @@ def start_pretraining(training_path, tpu_name, sequence_length,
     with tpu_strategy.scope():
         model = make_or_restore_model(sequence_length, vocab_size, checkpoint_path)
         adamax = tf.keras.optimizers.Adamax(learning_rate=0.001)
-        model.compile(optimizer=adamax, loss='mse', metrics=['accuracy'])
+        model.compile(optimizer=adamax, loss='categorical_crossentropy', metrics=['accuracy'])
 
     
     logging.info('Gather training and validation data files')
