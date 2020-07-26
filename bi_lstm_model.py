@@ -66,7 +66,7 @@ def get_new_model(sequence_length, vocab_size):
 
     return model
 
-
+@tf.function
 def create_tpu_strategy(tpu_name):
     #tpu_worker = 'grpc://{}'.format(tpu_name.strip())
     logging.info('Using TPU worker: %s', tpu_name)
@@ -81,7 +81,7 @@ def create_tpu_strategy(tpu_name):
 
     return strategy
 
-
+@tf.function
 def download_model_checkpoint(path):
     logging.info('Downloading model checkpoint: %s', path)
     model_file = file_io.FileIO(path, mode='rb')
