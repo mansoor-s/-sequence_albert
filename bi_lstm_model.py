@@ -100,13 +100,14 @@ def make_or_restore_model(sequence_length, vocab_size, checkpoint_path):
     checkpoints = tf.io.gfile.glob(checkpoint_path)
     if checkpoints:
         checkpoint_files = [f for f in checkpoints if 'ckpt-' in f]
-        stats = [tf.io.stat(f) for f in checkpoint_files]
-        checkpoint_file_stats = list(zip(checkpoint_files, stats))
-        checkpoint_file_stats.sort(key=lambda stat: stat[1], reverse=True)
+        if checkpoint_files:
+            stats = [tf.io.stat(f) for f in checkpoint_files]
+            checkpoint_file_stats = list(zip(checkpoint_files, stats))
+            checkpoint_file_stats.sort(key=lambda stat: stat[1], reverse=True)
 
-        latest_checkpoint = checkpoint_file_stats[0]
-        logging.info("Restoring from", latest_checkpoint)
-        return download_model_checkpoint(latest_checkpoint)
+            latest_checkpoint = checkpoint_file_stats[0]
+            logging.info("Restoring from", latest_checkpoint)
+            return download_model_checkpoint(latest_checkpoint)
    
     logging.info("Creating a new model")
     return get_new_model(sequence_length, vocab_size)
