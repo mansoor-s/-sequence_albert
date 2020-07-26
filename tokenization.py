@@ -60,6 +60,9 @@ class FastaTokenizer(object):
   def vocab_words(self):
     return list(self.vocab.keys())
 
+  def vocab_size(self):
+    return len(self.vocab)
+
 
   def load_vocab(self):
     """Loads a vocabulary file into a dictionary."""
