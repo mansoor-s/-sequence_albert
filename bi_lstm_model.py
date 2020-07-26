@@ -51,7 +51,7 @@ def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=int
     
     return batched_dataset
 
-
+@tf.function
 def get_new_model(sequence_length, vocab_size):
     model = Sequential()
     model.add(Embedding(vocab_size, 128))
@@ -66,7 +66,6 @@ def get_new_model(sequence_length, vocab_size):
 
     return model
 
-@tf.function
 def create_tpu_strategy(tpu_name):
     #tpu_worker = 'grpc://{}'.format(tpu_name.strip())
     logging.info('Using TPU worker: %s', tpu_name)
