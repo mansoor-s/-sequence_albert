@@ -127,8 +127,7 @@ def start_pretraining(training_path, tpu_name, sequence_length,
     logging.info('Creating/Loading model')
     with tpu_strategy.scope():
         model = make_or_restore_model(sequence_length, vocab_size, checkpoint_path)
-        #adam = tf.keras.optimizers.Adam(learning_rate=0.001)
-        model.compile(optimizer='adam')
+        model.compile(optimizer='adam', loss='mse')
 
     
     logging.info('Gather training and validation data files')

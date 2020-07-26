@@ -2,3 +2,4 @@ numpy
 tensorflow
 h5py
 absl-py
+cloud-tpu-client
