@@ -54,7 +54,7 @@ def create_dataset(file_paths, batch_size, num_parallel_reads=8, buffer_size=1e+
 
 def get_new_model(sequence_length, vocab_size):
     model = Sequential()
-
+    logging.log('********VOCAB SIZE %d ******', vocab_size)
     model.add(Embedding(vocab_size, 128))
     model.add(Bidirectional(LSTM(1024, activation='relu', return_sequences=True)))
     model.add(Bidirectional(LSTM(1024, activation='relu', return_sequences=True)))
