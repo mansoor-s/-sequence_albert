@@ -162,7 +162,7 @@ if __name__ == "__main__":
     parser.add_argument("--training_path", required=True)
     #parser.add_argument("--validation_path", required=True)
     parser.add_argument("--model_save_path", required=True)
-    parser.add_argument("--max_seq_len", default=512)
+    parser.add_argument("--sequence_length", default=512)
     parser.add_argument("--vocab_file", required=True)
     parser.add_argument("--batch_size", required=True)
     parser.add_argument("--num_epochs", required=True)
