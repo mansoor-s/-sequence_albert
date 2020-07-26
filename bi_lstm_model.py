@@ -68,7 +68,7 @@ def get_new_model(sequence_length, vocab_size):
     return model
 
 
-def tpu_strategy(tpu_name):
+def create_tpu_strategy(tpu_name):
     tpu_worker = 'grpc://{}'.format(tpu_name.strip())
     resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu=tpu_worker)
     tf.config.experimental_connect_to_cluster(resolver)
@@ -121,7 +121,7 @@ def start_pretraining(training_path, tpu_name, sequence_length,
     if batch_size % 8:
         raise 'batch_size must be a multiple of number of TPU cores: 8'
 
-    tpu_strategy = tpu_strategy(tpu_name)
+    tpu_strategy = create_tpu_strategy(tpu_name)
 
     logging.info('Creating/Loading model')
     with tpu_strategy.scope():
